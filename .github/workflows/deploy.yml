@@ -18,6 +18,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: call-install-deps
 
+    permissions:
+      contents: write
+
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
