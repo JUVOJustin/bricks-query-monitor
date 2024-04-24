@@ -1,6 +1,6 @@
 === Bricks Query Monitor ===
 Contributors: juvodesign
-Tags: bricksbuilder, query-monitor, wordpress, performance
+Tags: bricksbuilder, query-monitor, performance
 Tested up to: 6.4.3
 Stable tag: 1.0.0
 License: GPLv2 or later
