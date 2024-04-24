@@ -1,0 +1,71 @@
+{
+    "name": "juvo/wordpress-plugin-boilerplate",
+    "description": "A boilerplate for WordPress plugin development. Supercharged with bud.js, Autoloading, and PHPStan.",
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Justin Vogt",
+            "email": "mail@justin-vogt.com",
+            "homepage": "https://justin-vogt.com"
+        }
+    ],
+    "require-dev": {
+        "composer/installers": "^1.0",
+        "phpstan/phpstan": "^1.7",
+        "php-stubs/acf-pro-stubs": "^6.0",
+        "szepeviktor/phpstan-wordpress": "^1.1",
+        "phpstan/extension-installer": "^1.1",
+        "yoast/phpunit-polyfills": "^1.0",
+        "php-stubs/wp-cli-stubs": "^2.10",
+        "wp-cli/wp-cli": "^2.10"
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Bricks_Query_Monitor\\": "src/"
+        }
+    },
+    "scripts": {
+        "post-create-project-cmd": [
+            "composer exec -- wp setup"
+        ],
+        "strauss": [
+            "test -f ./bin/strauss.phar || curl -o bin/strauss.phar -L -C - https://github.com/BrianHenryIE/strauss/releases/latest/download/strauss.phar",
+            "@php bin/strauss.phar"
+        ],
+        "post-install-cmd": [
+            "@strauss"
+        ],
+        "post-update-cmd": [
+            "@strauss"
+        ],
+        "static-analyse": "@php ./vendor/bin/phpstan analyse"
+    },
+    "extra": {
+        "installer-paths": {
+            "vendor/{$vendor}/{$name}/": [
+                "type:wordpress-plugin"
+            ]
+        },
+        "strauss": {
+            "target_directory": "vendor/vendor-prefixed",
+            "namespace_prefix": "Bricks_Query_Monitor\\Dependencies\\",
+            "classmap_prefix": "Bricks_Query_Monitor",
+            "constant_prefix": "BRICKS_QUERY_MONITOR",
+            "exclude_from_prefix": {
+                "file_patterns": []
+            },
+            "delete_vendor_files": true
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "phpstan/extension-installer": true,
+            "composer/installers": true
+        }
+    },
+    "require": {
+        "php": ">=7.4"
+    }
+}
