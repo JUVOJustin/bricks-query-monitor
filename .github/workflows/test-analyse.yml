@@ -28,15 +28,9 @@ jobs:
         with:
           path: |
             vendor
-            node_modules
-            dist
-          key: deps-dev-${{ hashFiles('composer.lock') }}-${{ hashFiles('package-lock.json') }}
+          key: deps-dev-${{ hashFiles('composer.lock') }}
           fail-on-cache-miss: true
         id: cache
-
-      - name: Build assets
-        run: |
-          npm run production
 
       - name: PHPSTAN
         run: composer run static-analyse

@@ -28,9 +28,7 @@ jobs:
         with:
           path: |
             vendor
-            node_modules
-            dist
-          key: deps-prod-${{ hashFiles('composer.lock') }}-${{ hashFiles('package-lock.json') }}
+          key: deps-prod-${{ hashFiles('composer.lock') }}
           fail-on-cache-miss: true
         id: cache
 

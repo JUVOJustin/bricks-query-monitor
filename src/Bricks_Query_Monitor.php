@@ -104,10 +104,6 @@ class Bricks_Query_Monitor
     private function define_admin_hooks(): void
     {
 
-        add_action('admin_enqueue_scripts', function () {
-            $this->enqueue_bud_entrypoint('admin');
-        }, 100);
-
 		// Add Setup Command
 	    $this->loader->add_cli('setup', new Cli\Setup());
 
@@ -122,10 +118,6 @@ class Bricks_Query_Monitor
      */
     private function define_public_hooks(): void
     {
-
-        add_action('wp_enqueue_scripts', function() {
-            $this->enqueue_bud_entrypoint('frontend');
-        }, 100);
 
         add_action('bricks/query/before_loop', function($query, $args): void {
             do_action('qm/start', "bricks_query_{$query->element_id}_{$query->object_type}");
@@ -179,74 +171,5 @@ class Bricks_Query_Monitor
     {
         return $this->version;
     }
-
-    /**
-     * Enqueue a bud entrypoint
-     *
-     * @param string $entry
-     * @param mixed[] $localize_data
-     */
-    private function enqueue_bud_entrypoint(string $entry, array $localize_data = []): void
-    {
-        $entrypoints_manifest = BRICKS_QUERY_MONITOR_PATH . '/dist/entrypoints.json';
-
-        // parse json file
-        $entrypoints = json_decode(file_get_contents($entrypoints_manifest));
-
-        // Iterate entrypoint groups
-        foreach ($entrypoints as $key => $bundle) {
-
-            // Only process the entrypoint that should be enqueued per call
-            if ($key != $entry) {
-                continue;
-            }
-
-            // Iterate js and css files
-            foreach ($bundle as $type => $files) {
-                foreach ($files as $file) {
-                    if ($type == "js") {
-                        wp_enqueue_script(
-                            self::PLUGIN_NAME. "/$file",
-                            BRICKS_QUERY_MONITOR_URL . 'dist/' . $file,
-                            $bundle->dependencies ?? [],
-                            null,
-                            true,
-                        );
-
-                        // Maybe localize js
-                        if (!empty($localize_data)) {
-                            wp_localize_script(self::PLUGIN_NAME. "/$file", str_replace('-', '_', self::PLUGIN_NAME), $localize_data);
-
-                            // Unset after localize since we only need to localize one script per bundle so on next iteration will be skipped
-                            unset($localize_data);
-                        }
-                    }
-
-                    if ($type == "css") {
-                        wp_enqueue_style(
-                            self::PLUGIN_NAME. "/$file",
-                            BRICKS_QUERY_MONITOR_URL . 'dist/' . $file
-                        );
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-	 * Generates a unique but deterministic key usable for object caching. The key is prefixed by the plugin name
-	 *
-	 * @param mixed[] $matching_data Pass any data that should be used to match the cache
-	 *
-	 * @return string
-	 */
-	public static function generate_cache_key(array $matching_data): string {
-		foreach($matching_data as $key => $value) {
-			$matching_data[ $key] = serialize($value);
-		}
-
-		$matching_data = implode('-', $matching_data);
-		return self::PLUGIN_NAME. '-'. md5($matching_data);
-	}
 
 }
