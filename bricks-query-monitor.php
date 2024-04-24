@@ -17,7 +17,7 @@
  * Author:            Justin Vogt
  * Author URI:        https://justin-vogt.com
  * Description:       Allows you to easily debug bricks loops with the query monitor plugin
- * Version:           1.0.0
+ * Version:           1.0.1
  * Requires PHP:      7.4
  * Requires Plugins:  query-monitor
  * License:           GPL-2.0+
@@ -75,7 +75,7 @@ register_deactivation_hook( __FILE__, 'deactivate_bricks_query_monitor' );
  */
 function run_bricks_query_monitor() {
 
-	$version = "1.0.0";
+	$version = "1.0.1";
 	$plugin = new Bricks_Query_Monitor($version);
 	$plugin->run();
 
